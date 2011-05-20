@@ -1,0 +1,28 @@
+inherit utils
+
+
+
+SRC_URI="http://anoncvs.mindrot.org/index.cgi/openssh/contrib/gnome-ssh-askpass2.c?view=co"
+SRC_DIR=.
+PATCH_URI="5.1p1-fedora-askpass.patch"
+
+CYGPORT_USE_UNSTABLE_API=1
+src_unpack_hook() {
+	# ViewVC adds stray "done" to last line
+	sed -i -e '$d' *.c
+	sed -e '1d;23,$d;s/^.\* \?//g' *.c > COPYING
+	sed -e '1,27d;37,$d;s/^.\* *//g' *.c > README
+}
+
+src_compile() {
+	check_pkg_config GTK gtk+-2.0 x11
+	lndirs
+	cd ${B}
+	verbose ${CC} ${CFLAGS} ${GTK_CFLAGS} ${LDFLAGS} -o ${PN}.exe ${PN}2.c ${GTK_LIBS} || error
+}
+
+src_install() {
+	cd ${B}
+	dosbin ${PN}.exe
+	doenv SSH_ASKPASS /usr/sbin/ssh-askpass
+}

@@ -1,0 +1,6 @@
+category: Net Gnome
+requires: alternatives libglib2.0_0 libgtk2.0_0 libX11_6
+sdesc: "GTK+ passphrase grabber for ssh-add"
+ldesc: "This is a simple GNOME SSH passphrase grabber. To use it, set 
+the environment variable SSH_ASKPASS to point to the location of 
+gnome-ssh-askpass before calling ssh-add."
