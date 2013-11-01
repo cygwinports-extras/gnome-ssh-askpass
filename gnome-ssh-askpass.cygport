@@ -1,7 +1,14 @@
 inherit utils
 
 
-
+NAME="gnome-ssh-askpass"
+VERSION=5.4p1
+RELEASE=1
+CATEGORY="GNOME"
+SUMMARY="GTK+ passphrase grabber for ssh-add"
+DESCRIPTION="This is a simple GNOME SSH passphrase grabber. To use it, set the
+environment variable SSH_ASKPASS to point to the location of gnome-ssh-askpass
+before calling ssh-add."
 SRC_URI="http://anoncvs.mindrot.org/index.cgi/openssh/contrib/gnome-ssh-askpass2.c?view=co"
 SRC_DIR=.
 PATCH_URI="5.1p1-fedora-askpass.patch"
@@ -18,11 +25,11 @@ src_compile() {
 	check_pkg_config GTK gtk+-2.0 x11
 	lndirs
 	cd ${B}
-	verbose ${CC} ${CFLAGS} ${GTK_CFLAGS} ${LDFLAGS} -o ${PN}.exe ${PN}2.c ${GTK_LIBS} || error
+	verbose ${CC} ${CFLAGS} ${GTK_CFLAGS} ${LDFLAGS} -o ${NAME}.exe ${NAME}2.c ${GTK_LIBS} || error
 }
 
 src_install() {
 	cd ${B}
-	dosbin ${PN}.exe
+	dosbin ${NAME}.exe
 	doenv SSH_ASKPASS /usr/sbin/ssh-askpass
 }
