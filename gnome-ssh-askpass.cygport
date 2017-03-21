@@ -2,24 +2,19 @@ inherit utils
 
 
 NAME="gnome-ssh-askpass"
-VERSION=5.4p1
+VERSION=7.4
 RELEASE=1
 CATEGORY="GNOME"
 SUMMARY="GTK+ passphrase grabber for ssh-add"
 DESCRIPTION="This is a simple GNOME SSH passphrase grabber. To use it, set the
 environment variable SSH_ASKPASS to point to the location of gnome-ssh-askpass
 before calling ssh-add."
-SRC_URI="http://anoncvs.mindrot.org/index.cgi/openssh/contrib/gnome-ssh-askpass2.c?view=co"
+SRC_URI="https://raw.githubusercontent.com/openssh/openssh-portable/V_${VERSION//./_}/contrib/gnome-ssh-askpass2.c"
 SRC_DIR=.
-PATCH_URI="5.1p1-fedora-askpass.patch"
-
-CYGPORT_USE_UNSTABLE_API=1
-src_unpack_hook() {
-	# ViewVC adds stray "done" to last line
-	sed -i -e '$d' *.c
-	sed -e '1d;23,$d;s/^.\* \?//g' *.c > COPYING
-	sed -e '1,27d;37,$d;s/^.\* *//g' *.c > README
-}
+PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/rpms/openssh.git/plain/openssh-5.1p1-askpass-progress.patch
+	http://pkgs.fedoraproject.org/cgit/rpms/openssh.git/plain/openssh-4.3p2-askpass-grab-info.patch
+"
 
 src_compile() {
 	check_pkg_config GTK gtk+-2.0 x11
@@ -30,6 +25,7 @@ src_compile() {
 
 src_install() {
 	cd ${B}
-	dosbin ${NAME}.exe
-	doenv SSH_ASKPASS /usr/sbin/ssh-askpass
+	exeinto /usr/libexec
+	doexe ${NAME}.exe
+	doenv SSH_ASKPASS /usr/libexec/${NAME}
 }
